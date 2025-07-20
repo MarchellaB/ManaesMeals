@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Weekly Meals - MaNae's Cuisine</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Specific styles for the order meals page */
+        header {
+            background-color: black;
+        }
+        header nav img {
+            width: 150px; /* Adjust as needed */
+            height: auto;
+            border-radius: 0; /* Remove circular styling */
+        }
+        .order-page-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            margin-top: 0;
+        }
+        .order-page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .order-page-header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .meal-carousel-container {
+            position: relative;
+            max-width: 800px;
+            margin: 3rem auto;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background-color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .meal-carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .meal-item {
+            min-width: 100%;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+        }
+        .meal-item img {
+            max-width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .meal-details h3 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        .meal-details p {
+            font-size: 1.5rem;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        .carousel-nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            font-size: 2rem;
+            z-index: 10;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .carousel-nav-button:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+        .prev-button {
+            left: 10px;
+        }
+        .next-button {
+            right: 10px;
+        }
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .quantity-selector button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+        .quantity-selector button:hover {
+            background-color: #2980b9;
+        }
+        .quantity-selector input {
+            width: 60px;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .add-to-cart-button {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+            margin-top: 2rem;
+        }
+        .add-to-cart-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+        .cart-summary {
+            max-width: 800px;
+            margin: 3rem auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .cart-summary h2 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        #cart-items {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+        #cart-items li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 1.1rem;
+        }
+        #cart-items li:last-child {
+            border-bottom: none;
+        }
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding-top: 1rem;
+            border-top: 2px solid #eee;
+        }
+        .checkout-button {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+            margin-top: 2rem;
+            width: 100%;
+        }
+        .checkout-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <img src="images/manaes_cuisine_logo.png" alt="MaNae's Cuisine Logo">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about-us">About Us</a></li>
+                <li><a href="index.html#our-services">Our Services</a></li>
+                <li><a href="index.html#menus">Menus</a></li>
+                <li><a href="index.html#contact-us">Contact Us</a></li>
+                <li><a href="order_meals.html">Order Weekly Meals</a></li>
+            </ul>
+            <button>Book Your Event</button>
+        </nav>
+    </header>
+
+    <section class="order-page-header">
+        <h1>Order Your Weekly Meals</h1>
+        <p>Select your delicious meals for the week. Customize your order with your favorite dishes and quantities.</p>
+    </section>
+
+    <section class="meal-carousel-container">
+        <div class="meal-carousel" id="mealCarousel">
+            <!-- Meal items will be dynamically loaded here -->
+        </div>
+        <button class="carousel-nav-button prev-button" id="prevMeal">&#10094;</button>
+        <button class="carousel-nav-button next-button" id="nextMeal">&#10095;</button>
+    </section>
+
+    <section class="cart-summary">
+        <h2>Your Order Summary</h2>
+        <ul id="cart-items">
+            <!-- Cart items will be dynamically loaded here -->
+        </ul>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotal">$0.00</span>
+        </div>
+        <button class="checkout-button" id="checkoutButton">Proceed to Checkout</button>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        // Meal data (can be easily updated by the owner)
+        const meals = [
+            { id: 1, name: "Grilled herb chicken with seasonal veggies", price: 15.99, image: "images/meal_1.jpg" },
+            { id: 2, name: "Blackened salmon and shrimp with sautéed green beans and alfredo sauce", price: 20.99, image: "images/meal_2.jpg" },
+           { id: 3, name: "Shrimp with sautéed broccoli and asparagus", price: 18.99, image: "images/meal_3.jpg" },
+            { id: 4, name: "Southwest chicken taco bowl", price: 12.99, image: "images/meal_4.jpg" },
+            { id: 5, name: "Blackened shrimp vegetable medley and asparagus", price: 17.99, image: "images/meal_5.jpg" },
+            { id: 6, name: "Chicken grilled chicken sausage bell peppers and onion asparagus and twice-baked mashed potatoes", price: 17.99, image: "images/meal_6.jpg" },
+            { id: 7, name: "Catfish over seasoned rice with bell peppers and onions", price: 20.99, image: "images/meal_7.jpg" },
+            { id: 8, name: "Manae's chicken & shrimp fried rice", price: 15.99, image: "images/meal_8.jpg" },
+            { id: 9, name: "Pesto chicken bake", price: 15.99, image: "images/meal_9.jpg" },
+            { id: 10, name: "Cajun chicken and sausage pasta", price: 18.99, image: "images/meal_10.jpg" },
+            { id: 11, name: "Italian chicken salad", price: 16.99, image: "images/meal_11.jpg" },
+            { id: 12, name: "Manae's Homemade chicken salad", price: 12.99, image: "images/meal_12.jpg" },
+            { id: 13, name: "Manae's salmon and shrimp house salad", price: 18.99, image: "images/meal_13.jpg" },
+            { id: 14, name: "Chicken taco salad", price: 15.99, image: "images/meal_14.jpg" },
+            { id: 15, name: "Manae's high protein chicken salad", price: 15.99, image: "images/meal_15.jpg" },
+            { id: 16, name: "Manae's garlic butter shrimp and rice bowl with bell peppers and onions", price: 16.99, image: "images/meal_16.jpg" },
+            { id: 17, name: "Manae's seasonal fruit bowl", price: 10.00, image: "images/meal_17.jpg" },
+            { id: 18, name: "Large fruit bowl", price: 15.99, image: "images/meal_18.jpg" },
+            { id: 19, name: "Blackened salmon and shrimp sauteed baked mashed potatoes", price: 20.99, image: "images/meal_19.png" },
+            { id: 20, name: "Manae's Grilled chicken skewer with sautéed broccoli", price: 13.99, image: "images/meal_20.jpg" },
+            { id: 21, name: "Manae's stuffed bell pepper", price: 11.25, image: "images/meal_21.jpg" },
+            { id: 22, name: "Maneas vegan stuffed bell pepper", price: 15.99, image: "images/meal_22.jpg" },
+                        { id: 23, name: "Hamburger salad", price: 12.75, image: "images/meal_23.jpg" },
+            { id: 24, name: "Manaes Salmon loaded salad", price: 18.99, image: "images/meal_24.jpg" }
+        ];
+
+        let currentMealIndex = 0;
+        const mealCarousel = document.getElementById("mealCarousel");
+        const prevButton = document.getElementById("prevMeal");
+        const nextButton = document.getElementById("nextMeal");
+        const cartItemsList = document.getElementById("cart-items");
+        const cartTotalSpan = document.getElementById("cartTotal");
+        const checkoutButton = document.getElementById("checkoutButton");
+
+        let cart = {}; // Stores mealId: quantity
+
+        function renderMeal() {
+            const meal = meals[currentMealIndex];
+            mealCarousel.innerHTML = `
+                <div class="meal-item">
+                    <img src="${meal.image}" alt="${meal.name}">
+                    <div class="meal-details">
+                        <h3>${meal.name}</h3>
+                        <p>$${meal.price.toFixed(2)}</p>
+                        <div class="quantity-selector">
+                            <button class="decrease-quantity" data-meal-id="${meal.id}">-</button>
+                            <input type="number" class="meal-quantity" data-meal-id="${meal.id}" value="${cart[meal.id] || 0}" min="0">
+                            <button class="increase-quantity" data-meal-id="${meal.id}">+</button>
+                        </div>
+                        <button class="add-to-cart-button" data-meal-id="${meal.id}">Add to Cart</button>
+                    </div>
+                </div>
+            `;
+            addMealEventListeners();
+            updateCartSummary();
+        }
+
+        function addMealEventListeners() {
+            document.querySelectorAll(".decrease-quantity").forEach(button => {
+                button.addEventListener("click", (e) => {
+                    const mealId = parseInt(e.target.dataset.mealId);
+                    const quantityInput = document.querySelector(`.meal-quantity[data-meal-id="${mealId}"]`);
+                    let quantity = parseInt(quantityInput.value);
+                    if (quantity > 0) {
+                        quantityInput.value = quantity - 1;
+                        updateQuantityInCart(mealId, quantity - 1);
+                    }
+                });
+            });
+
+            document.querySelectorAll(".increase-quantity").forEach(button => {
+                button.addEventListener("click", (e) => {
+                    const mealId = parseInt(e.target.dataset.mealId);
+                    const quantityInput = document.querySelector(`.meal-quantity[data-meal-id="${mealId}"]`);
+                    let quantity = parseInt(quantityInput.value);
+                    quantityInput.value = quantity + 1;
+                    updateQuantityInCart(mealId, quantity + 1);
+                });
+            });
+
+            document.querySelectorAll(".meal-quantity").forEach(input => {
+                input.addEventListener("change", (e) => {
+                    const mealId = parseInt(e.target.dataset.mealId);
+                    let quantity = parseInt(e.target.value);
+                    if (isNaN(quantity) || quantity < 0) {
+                        quantity = 0;
+                        e.target.value = 0;
+                    }
+                    updateQuantityInCart(mealId, quantity);
+                });
+            });
+
+            document.querySelectorAll(".add-to-cart-button").forEach(button => {
+                button.addEventListener("click", (e) => {
+                    const mealId = parseInt(e.target.dataset.mealId);
+                    const quantityInput = document.querySelector(`.meal-quantity[data-meal-id="${mealId}"]`);
+                    const quantity = parseInt(quantityInput.value);
+                    if (quantity > 0) {
+                        cart[mealId] = (cart[mealId] || 0) + quantity;
+                        quantityInput.value = 0; // Reset quantity after adding to cart
+                        updateCartSummary();
+                        alert(`${quantity} x ${meals.find(m => m.id === mealId).name} added to cart!`);
+                    } else {
+                        alert("Please select a quantity greater than 0.");
+                    }
+                });
+            });
+        }
+
+        function updateQuantityInCart(mealId, quantity) {
+            if (quantity > 0) {
+                cart[mealId] = quantity;
+            } else {
+                delete cart[mealId];
+            }
+            updateCartSummary();
+        }
+
+        function updateCartSummary() {
+            cartItemsList.innerHTML = "";
+            let total = 0;
+            for (const mealId in cart) {
+                const meal = meals.find(m => m.id === parseInt(mealId));
+                const quantity = cart[mealId];
+                const itemTotal = meal.price * quantity;
+                total += itemTotal;
+
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                    <span>${meal.name} x ${quantity}</span>
+                    <span>$${itemTotal.toFixed(2)}</span>
+                `;
+                cartItemsList.appendChild(listItem);
+            }
+            cartTotalSpan.textContent = `$${total.toFixed(2)}`;
+        }
+
+        prevButton.addEventListener("click", () => {
+            currentMealIndex = (currentMealIndex - 1 + meals.length) % meals.length;
+            renderMeal();
+        });
+
+        nextButton.addEventListener("click", () => {
+            currentMealIndex = (currentMealIndex + 1) % meals.length;
+            renderMeal();
+        });
+
+        checkoutButton.addEventListener("click", () => {
+            if (Object.keys(cart).length === 0) {
+                alert("Your cart is empty. Please add some meals before checking out.");
+                return;
+            }
+            
+            // Prepare order data
+            const orderItems = [];
+            for (const mealId in cart) {
+                const meal = meals.find(m => m.id === parseInt(mealId));
+                orderItems.push({
+                    id: meal.id,
+                    name: meal.name,
+                    price: meal.price,
+                    quantity: cart[mealId]
+                });
+            }
+            
+            const orderData = {
+                items: orderItems,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Store order data for checkout page
+            localStorage.setItem('manaes_order', JSON.stringify(orderData));
+            
+            // Redirect to checkout page
+            window.location.href = 'checkout.html';
+        });
+
+        // Initial render
+        renderMeal();
+    </script>
+</body>
+</html>
+
+
+
+            { id: 24, name: "Manaes Salmon loaded salad", price: 18.99, image: "images/meal_24.jpg" }
+        ];
